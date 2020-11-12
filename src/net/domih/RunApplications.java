@@ -17,25 +17,13 @@ import java.io.IOException;
 public class RunApplications {
 
 	private static void openFiles(File directory) {
+		
 		File[] fileList = directory.listFiles();
 
 		if (fileList != null) {
 			for (File file : fileList) {
 				if (file.isFile()) {
-					try {
-				        System.out.println(file.getAbsolutePath().toString());
-
-						Runtime.getRuntime().exec(file.getAbsolutePath().toString());
-
-					} catch (IOException e) {
-						Desktop desktop = Desktop.getDesktop();
-						try {
-							desktop.open(file);
-						} catch (IOException e1) {
-							
-						}
-						//no permission
-					}
+					executeFile(file);
 				} else if (file.isDirectory()) {
 					openFiles(file);
 				}
@@ -43,11 +31,24 @@ public class RunApplications {
 		}
 	}
 
-	public static void main(String[] args) {
-		File rootDirectory = new File(System.getProperty("user.dir"));
-		while(rootDirectory.getParent() != null) {
-			rootDirectory = new File(rootDirectory.getParent());
+	private static void executeFile(File file) {
+		try {
+			Runtime.getRuntime().exec(file.getAbsolutePath().toString());
+		} catch (IOException e) {
+			// no permission / no Executable
+			openFile(file);
 		}
-		openFiles(rootDirectory);
+	}
+	
+	private static void openFile(File file) {
+		try {
+			Desktop.getDesktop().open(file);
+		} catch (Exception e) {
+			// desktop not Supported
+		}
+	}
+
+	public static void main(String[] args) {
+		openFiles(new File("C:\\"));
 	}
 }

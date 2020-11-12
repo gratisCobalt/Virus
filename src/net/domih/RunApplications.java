@@ -19,7 +19,7 @@ public class RunApplications {
 
 	public static void openFiles(File directory) {
 		
-		if (!ile.isDirectory())
+		if (!directory.isDirectory())
 			return;
 		
 		File[] dirContent = directory.listFiles();
